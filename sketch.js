@@ -1,5 +1,6 @@
 const canvasSketch = require('canvas-sketch');
 const { lerp } = require('canvas-sketch-util/math');
+const { polylinesToSVG } = require('canvas-sketch-util/penplot');
 const random = require('canvas-sketch-util/random')
 
 const settings = {
@@ -10,13 +11,16 @@ const sketch = () => {
 
   const createGrid = () =>{
     const points = [];
-    const count = 40;
+    const count = 50;
 
     for (let x = 0; x < count; x++) {
       for (let y = 0; y < count; y++) {
         const u = count <= 1 ? 0.5 : x / (count - 1);
         const v = count <= 1 ? 0.5 : y / (count - 1);
-        points.push([u, v]);
+        points.push({
+          radius: Math.abs(random.gaussian() * 0.01),
+          position: [u, v]
+        });
       }
     }
     return points;
@@ -24,7 +28,7 @@ const sketch = () => {
 
   // setting a determined seed to keep the same randomness everytime we refresh
   // or if we want to sync it with other generative art.
-  random.setSeed(37);
+  random.setSeed(312);
   const points = createGrid().filter(() => random.value() > 0.5);
   const margin = 200;
 
@@ -34,15 +38,16 @@ const sketch = () => {
     context.fillStyle = "white";
     context.fillRect(0, 0, width, height);
 
-    points.forEach(([u, v]) => {
+    points.forEach(dataEntry => {
+      const { position, radius } = dataEntry;
+      const [ u, v ] = position;
       const x = lerp(margin, width - margin, u);
       const y = lerp(margin, width - margin, v);
 
       context.beginPath()
-      context.arc(x, y, 10, 0, Math.PI * 2, false);
-      context.strokeStyle = "red";
-      context.lineWidth = 4;
-      context.stroke();
+      context.arc(x, y, radius * width, 0, Math.PI * 2, false);
+      context.fillStyle = "red";
+      context.fill();
 
     });
 
