@@ -1,5 +1,6 @@
 const canvasSketch = require('canvas-sketch');
 const { lerp } = require('canvas-sketch-util/math');
+const random = require('canvas-sketch-util/random')
 
 const settings = {
   dimensions: [ 2048, 2048 ]
@@ -21,7 +22,10 @@ const sketch = () => {
     return points;
   }
 
-  const points = createGrid().filter(() => Math.random() > 0.5);
+  // setting a determined seed to keep the same randomness everytime we refresh
+  // or if we want to sync it with other generative art.
+  random.setSeed(37);
+  const points = createGrid().filter(() => random.value() > 0.5);
   const margin = 200;
 
 
