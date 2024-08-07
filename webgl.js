@@ -95,7 +95,7 @@ const sketch = ({ context, width, height }) => {
         },
         // And render events here
         render({ playhead }) {
-            scene.rotation.y = playhead * 0.45
+            scene.rotation.y = Math.sin(playhead * Math.PI * 2) * 0.5
 
             // Draw scene with our camera
             renderer.render(scene, camera)
