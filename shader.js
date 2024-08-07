@@ -23,11 +23,13 @@ const frag = glsl(/*glsl*/ `
     vec2 center = vUv - 0.5;
     center.x *= aspect;
     float distance = length(center);
+    
+    float alpha = step(distance, 0.25);
 
     // Mix colors from one vector to another based on the 2vector reference
     vec3 color = mix(colorA, colorB, vUv.y);
-    // set a ternary to fill the alpha channel with full or null opacity
-    gl_FragColor = vec4(color, distance > 0.15 ? 0.0 : 1.0 );
+    // set a ternary to fill the alpha channe l with full or null opacity
+    gl_FragColor = vec4(color, alpha);
   }
 `)
 
@@ -35,6 +37,8 @@ const frag = glsl(/*glsl*/ `
 const sketch = ({ gl }) => {
     // Create the shader and return it
     return createShader({
+        // set a bg color
+        clearColor: 'white',
         // Pass along WebGL context
         gl,
         // Specify fragment and/or vertex shader strings
