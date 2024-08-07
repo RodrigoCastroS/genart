@@ -24,11 +24,11 @@ const frag = glsl(/*glsl*/ `
     center.x *= aspect;
     float distance = length(center);
     
-    float alpha = step(distance, 0.25);
+    float alpha = smoothstep(0.252, 0.25, distance);
 
     // Mix colors from one vector to another based on the 2vector reference
     vec3 color = mix(colorA, colorB, vUv.y);
-    // set a ternary to fill the alpha channe l with full or null opacity
+    // set a ternary to fill the alpha channe  l with full or null opacity
     gl_FragColor = vec4(color, alpha);
   }
 `)
