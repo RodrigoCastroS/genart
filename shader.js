@@ -5,7 +5,7 @@ const glsl = require('glslify')
 // Setup our sketch
 const settings = {
     context: 'webgl',
-    animate: false,
+    animate: true,
 }
 
 // Your glsl code
@@ -17,8 +17,8 @@ const frag = glsl(/*glsl*/ `
   varying vec2 vUv;
 
   void main () {
-    vec3 colorA = vec3(1, 1, 0);
-    vec3 colorB = vec3(0, 1, .8);
+    vec3 colorA = sin(time) + vec3(1.0, 1.0, 0.0);
+    vec3 colorB = vec3(0.0, 1.0, 0.8);
 
     vec2 center = vUv - 0.5;
     center.x *= aspect;
@@ -27,7 +27,8 @@ const frag = glsl(/*glsl*/ `
     float alpha = smoothstep(0.252, 0.25, distance);
 
     // Mix colors from one vector to another based on the 2vector reference
-    vec3 color = mix(colorA, colorB, vUv.y);
+
+    vec3 color = mix(colorA, colorB, cos(vUv.y) + vUv.x * sin(time)); // Include time variation to move the gradient
     // set a ternary to fill the alpha channe  l with full or null opacity
     gl_FragColor = vec4(color, alpha);
   }
@@ -46,7 +47,7 @@ const sketch = ({ gl }) => {
         // Specify additional uniforms to pass down to the shaders
         uniforms: {
             // Expose props from canvas-sketch
-            time: ({ time }) => time * 0.1,
+            time: ({ time }) => time * 0.8,
             aspect: ({ width, height }) => width / height,
         },
     })
